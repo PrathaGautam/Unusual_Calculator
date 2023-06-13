@@ -1,0 +1,167 @@
+<html>
+<head>
+    <style>
+        body {
+            background-color: black;
+            color: rgb(236, 117, 5);
+        }
+
+        /*font for text-fields :*/
+        input[name="arguments"],
+        input[name="result_field"]
+        {
+            font-family: "Courier New", monospace;
+            font-style: Italic;
+            font-size: 20px;
+        }
+
+        #image{
+            position: fixed;
+            top:20px;
+            right:20px;
+            transform:rotate(180deg);
+        }
+
+        #gradient_image
+        {
+            width:100%;
+            height: 300px;
+            position:absolute;
+            z-index:-1;
+            top: 0;
+            left: 0;
+
+        }
+
+        #link
+        {
+            display: inline-block;
+            padding : 5px 10px;
+            background-color: #ec7505;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        #link:hover
+        {
+            background-color: #d94646;
+        }
+
+    </style>
+
+    <script>
+        function perform_operation()
+        {
+            var args_input = document.querySelector('input[name="arguments"]');
+            var operation = document.getElementById("operation");
+            var result_input = document.querySelector('input[name="result_field"]');
+            var operation_type = operation.value;
+
+            var args_input_array = args_input.value.split(" ").map(Number);
+            console.log(args_input_array)
+            var result;
+            switch(operation_type)
+            {
+                case "summation":
+                    result = args_input_array.reduce(function(a,b) {return a+b;},0);
+                    break;
+
+                case "multiplication":
+                    result = args_input_array.reduce(function(a,b) {return a*b;},1);
+                    break;
+
+                case "maximum":
+                    // spread syntax :
+                    result = Math.max(...args_input_array);
+                    break;
+
+                case "minimum":
+                    result = Math.min(...args_input_array);
+                    break;
+
+                default:
+                    result = "Invalid operation";
+
+            }
+            result_input.value = result;
+
+        }
+
+        function fill_random_numbers(min=0,max=9)
+        {
+            var args_input = document.querySelector('input[name="arguments"]');
+            var random_numbers = [];
+            for (var i=0;i<10;i++)
+            {
+                var random_decimal = Math.random();
+                var random_number = Math.floor(random_decimal * (max - min + 1) + min);
+                random_numbers.push(random_number);
+            }
+            args_input.value = random_numbers.join(' ');
+
+        }
+
+        function download_content()
+        {
+            var arguments = document.getElementById('input1').value;
+            var result = document.getElementById('input2').value;
+            var operation = document.getElementById('operation').value;
+            var filename = document.getElementById('filename').value;
+
+            if (!filename)
+            {
+                filename = "filename";
+            }
+
+            var file_content = "Arguments : " + arguments + "\n" +
+                "Operation : " + operation + "\n" +
+                "Result : " + result;
+
+            var download_link = document.getElementById("link");
+            download_link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(file_content);
+            download_link.download = filename;
+            download_link.click();
+
+        }
+    </script>
+
+<title>Unusual Calculator</title>
+</head>
+
+<img id="gradient_image" src = "gradient.png" >
+<link rel="icon" href = "icon.png">
+<!--<link rel="shortcut icon" href="icon.png">-->
+
+<!--Task 1 :-->
+<h1> UNUSUAL CALCULATOR</h1>
+<body>
+<input  id = "input1" name = "arguments" type="text" placeholder = "Arguments.." ><br>
+<input  id = "input2" name = "result_field" type="text" placeholder = "Result.." readonly><br>
+
+
+<select name="operation" id="operation" style="background-color: #ec7505">
+    <option value="summation">&sum;</option>
+    <option value="multiplication">&prod;</option>
+    <option value="maximum">&gt</option>
+    <option value="minimum">&lt</option>
+</select>
+
+<!--Task 2-->
+<button type="button" onclick="perform_operation()" style="background-color: #ec7505">Count</button>
+<button type="button" onclick="fill_random_numbers()" style="background-color: #ec7505">Fill</button>
+<hr>
+
+<!--task 6-->
+<br> <input type="color" onchange = "input1.style.color= this.value;input2.style.color= this.value">
+<input type="color" onchange = "input1.style.backgroundColor=this.value; input2.style.backgroundColor=this.value" value="#ffffff">
+
+
+<img id="image" src = "calc.png" alt="upside_down_calc">
+
+<br><br><label> FILENAME : </label>
+<input type="text" id ="filename">
+
+<a id = "link" href="" onclick="download_content()">SAVE</a>
+
+</body>
+</html>
